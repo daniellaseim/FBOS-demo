@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stock Prediction Game</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <header class="container">
+      <h1>Stock Market Prediction Game</h1>
+    </header>
+
+    <main class="container">
+      <section class="card">
+        <form id="ticker-form" class="ticker-form">
+          <label for="ticker-input">Enter a stock ticker (e.g., MSFT, COF)</label>
+          <div class="ticker-row">
+            <input id="ticker-input" name="ticker" placeholder="AAPL" required maxlength="10" />
+            <button type="submit" id="start-btn">Start Game</button>
+          </div>
+          <p class="help">Uses live market data from Alpha Vantage.</p>
+        </form>
+
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="grid">
+        <div class="card">
+          <h2>Chart</h2>
+          <canvas id="price-chart" height="180"></canvas>
+        </div>
+
+        <div class="card">
+          <h2>Game</h2>
+          <div class="info">
+            <div><strong>Ticker:</strong> <span id="info-ticker">—</span></div>
+            <div><strong>Current date:</strong> <span id="info-date">—</span></div>
+            <div><strong>Revealed price:</strong> <span id="info-price">—</span></div>
+            <div><strong>Score:</strong> <span id="info-score">0</span></div>
+          </div>
+          <div class="actions">
+            <button id="btn-up" disabled>Predict Up</button>
+            <button id="btn-down" disabled>Predict Down</button>
+            <button id="btn-end" disabled class="secondary">End Game</button>
+          </div>
+          <p id="feedback" class="feedback" aria-live="polite"></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="container footer">
+      <p>
+        Data provided by <a href="https://www.alphavantage.co/" target="_blank" rel="noreferrer noopener">Alpha Vantage</a>.
+      </p>
+    </footer>
+  </body>
+  </html>
+
