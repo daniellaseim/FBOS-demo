@@ -1,0 +1,79 @@
+:root {
+  --bg: #0b1020;
+  --card: #121732;
+  --text: #eaf0ff;
+  --muted: #b7c1e1;
+  --accent: #7aa2ff;
+  --green: #22c55e;
+  --red: #ef4444;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: radial-gradient(1200px 700px at 20% -10%, #182043, transparent), var(--bg);
+  color: var(--text);
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1 { font-size: 28px; margin: 12px 0 0; }
+h2 { font-size: 18px; margin: 0 0 12px; color: var(--muted); }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 16px;
+}
+
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.ticker-form label { display: block; margin-bottom: 8px; color: var(--muted); }
+.ticker-row { display: flex; gap: 8px; }
+
+input {
+  flex: 1;
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+}
+
+button {
+  background: var(--accent);
+  color: #0a0f1f;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+.secondary { background: transparent; color: var(--muted); border: 1px solid rgba(255,255,255,0.15); }
+
+.status { margin-top: 10px; min-height: 20px; color: var(--muted); }
+.info { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.actions { display: flex; gap: 8px; }
+.feedback { min-height: 22px; }
+
+.footer { text-align: center; color: var(--muted); }
+.help { color: var(--muted); font-size: 12px; margin-top: 6px; }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
