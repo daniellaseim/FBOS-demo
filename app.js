@@ -64,29 +64,47 @@ function resetUI() {
 }
 
 async function fetchDailySeries(ticker) {
-  const url = new URL(API_URL);
-  url.searchParams.set("function", "TIME_SERIES_DAILY_ADJUSTED");
-  url.searchParams.set("symbol", ticker);
-  url.searchParams.set("outputsize", "compact"); // ~100 most recent data points
-  url.searchParams.set("apikey", API_KEY);
+  // Try adjusted first, fall back to non-adjusted if necessary
+  const tryFetch = async (fnName) => {
+    const url = new URL(API_URL);
+    url.searchParams.set("function", fnName);
+    url.searchParams.set("symbol", ticker);
+    url.searchParams.set("outputsize", "compact");
+    url.searchParams.set("apikey", API_KEY);
 
-  const resp = await fetch(url.toString());
-  if (!resp.ok) {
-    throw new Error(`Network error: ${resp.status}`);
-  }
-  const data = await resp.json();
-
-  if (data.Note) {
-    throw new Error("API rate limit reached. Please wait a minute and try again.");
-  }
-  if (data["Error Message"]) {
-    throw new Error("Invalid ticker symbol. Please try a different one.");
-  }
-  const series = data["Time Series (Daily)"];
-  if (!series) {
+    const resp = await fetch(url.toString());
+    if (!resp.ok) {
+      throw new Error(`Network error: ${resp.status}`);
+    }
+    const data = await resp.json();
+    if (data && typeof data === "object") {
+      if (data.Note) {
+        throw new Error(data.Note);
+      }
+      if (data.Information) {
+        throw new Error(data.Information);
+      }
+      if (data["Error Message"]) {
+        throw new Error("Invalid ticker symbol. Please try a different one.");
+      }
+      const series = data["Time Series (Daily)"];
+      if (series) return series;
+    }
+    // If we reach here, unexpected shape
     throw new Error("Unexpected API response. Try again later.");
+  };
+
+  try {
+    return await tryFetch("TIME_SERIES_DAILY_ADJUSTED");
+  } catch (e) {
+    // If adjusted fails due to function-specific issues, try non-adjusted
+    try {
+      return await tryFetch("TIME_SERIES_DAILY");
+    } catch (e2) {
+      // Prefer the latest error message surfaced to the user
+      throw e2 instanceof Error ? e2 : e;
+    }
   }
-  return series;
 }
 
 function buildSortedDates(seriesObj) {
@@ -99,7 +117,8 @@ function buildSortedDates(seriesObj) {
 function getClose(seriesObj, dateStr) {
   const o = seriesObj[dateStr];
   if (!o) return null;
-  const closeStr = o["4. close"] || o["5. adjusted close"]; // prefer close; fallback adjusted
+  // Prefer adjusted close when available
+  const closeStr = o["5. adjusted close"] || o["4. close"];
   return closeStr ? Number(closeStr) : null;
 }
 
